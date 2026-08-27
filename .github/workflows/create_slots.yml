@@ -6,11 +6,17 @@ on:
     paths:
       - .github/workflows/create_slots.yml
       - infra/main.bicep
+  workflow_dispatch:
+    inputs:
+      app_name:
+        description: 'Azure App Service name'
+        required: true
+        default: "my-app"
 
 permissions:
   contents: read
   id-token: write
-  
+
 jobs:
   create_slots:
     runs-on: ubuntu-latest
