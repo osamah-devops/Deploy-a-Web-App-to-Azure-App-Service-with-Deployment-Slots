@@ -28,6 +28,7 @@ resource web 'Microsoft.Web/sites@2024-04-01' = {
       appSettings: [
         { name: 'SLOT_NAME', value: 'production' }
         { name: 'SLOT_COLOR', value: 'green' }
+        { name: 'ASPNETCORE_URLS', value: 'http://0.0.0.0:8080' }
         { name: 'WEBSITE_RUN_FROM_PACKAGE', value: '1' }
       ]
     }
@@ -46,6 +47,8 @@ resource staging 'Microsoft.Web/sites/slots@2024-04-01' = {
       appSettings: [
         { name: 'SLOT_NAME', value: 'staging' }
         { name: 'SLOT_COLOR', value: 'orange' }
+        { name: 'ASPNETCORE_URLS', value: 'http://0.0.0.0:8080' }
+        { name: 'WEBSITE_RUN_FROM_PACKAGE', value: '1' }
         { name: 'WEBSITE_SWAP_WARMUP_PING_PATH', value: '/health' }
         { name: 'WEBSITE_SWAP_WARMUP_PING_STATUSES', value: '200,202' }
       ]
@@ -65,6 +68,8 @@ resource dev 'Microsoft.Web/sites/slots@2024-04-01' = {
       appSettings: [
         { name: 'SLOT_NAME', value: 'dev' }
         { name: 'SLOT_COLOR', value: 'blue' }
+        { name: 'ASPNETCORE_URLS', value: 'http://0.0.0.0:8080' }
+        { name: 'WEBSITE_RUN_FROM_PACKAGE', value: '1' }
         { name: 'WEBSITE_SWAP_WARMUP_PING_PATH', value: '/health' }
         { name: 'WEBSITE_SWAP_WARMUP_PING_STATUSES', value: '200,202' }
       ]

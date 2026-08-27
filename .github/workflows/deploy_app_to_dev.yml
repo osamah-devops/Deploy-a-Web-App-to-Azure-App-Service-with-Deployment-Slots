@@ -71,6 +71,7 @@ jobs:
             --settings \
               SLOT_NAME=dev \
               SLOT_COLOR=blue \
+              ASPNETCORE_URLS=http://0.0.0.0:8080 \
               WEBSITE_RUN_FROM_PACKAGE=1 \
               WEBSITE_SWAP_WARMUP_PING_PATH=/health \
               WEBSITE_SWAP_WARMUP_PING_STATUSES=200,202
