@@ -6,7 +6,11 @@ on:
       app_name:
         description: 'Azure App Service name'
         required: true
-        default: ${{ secrets.AZURE_APP_NAME }}
+        default: "my-app-service"
+
+permissions:
+  contents: read
+  id-token: write
 
 jobs:
   promote:

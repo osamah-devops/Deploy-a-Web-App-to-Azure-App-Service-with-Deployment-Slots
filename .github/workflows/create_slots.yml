@@ -6,6 +6,11 @@ on:
     paths:
       - .github/workflows/create_slots.yml
       - infra/main.bicep
+
+permissions:
+  contents: read
+  id-token: write
+  
 jobs:
   create_slots:
     runs-on: ubuntu-latest

@@ -3,6 +3,10 @@ name: promote_slots
 on:
   workflow_dispatch:
 
+permissions:
+  contents: read
+  id-token: write
+
 jobs:
   validate_dev_slot:
     runs-on: ubuntu-latest

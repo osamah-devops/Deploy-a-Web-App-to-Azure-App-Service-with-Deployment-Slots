@@ -8,6 +8,10 @@ on:
       - .github/workflows/deploy_app_to_dev.yml
       - SlotDemo/**
 
+permissions:
+  contents: read
+  id-token: write
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
