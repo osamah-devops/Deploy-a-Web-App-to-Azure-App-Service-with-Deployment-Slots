@@ -1,0 +1,38 @@
+name: promote_dev_to_staging
+
+on:
+  workflow_dispatch:
+    inputs:
+      app_name:
+        description: 'Azure App Service name'
+        required: true
+        default: ${{ secrets.AZURE_APP_NAME }}
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Azure login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Validate dev slot health
+        run: |
+          curl -f "https://${{ secrets.AZURE_APP_NAME }}-dev.azurewebsites.net/health" || exit 1
+
+      - name: Swap dev into staging
+        run: |
+          az webapp deployment slot swap \
+            --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+            --name ${{ secrets.AZURE_APP_NAME }} \
+            --slot dev \
+            --target-slot staging
+
+      - name: Confirm swap success
+        run: |
+          echo "Dev was successfully swapped into staging."
+          echo "Validate the staging endpoint: https://${{ secrets.AZURE_APP_NAME }}-staging.azurewebsites.net/health"

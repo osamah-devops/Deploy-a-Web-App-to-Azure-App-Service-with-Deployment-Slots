@@ -1,0 +1,33 @@
+name: Create Slots
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/create_slots.yml
+      - infra/main.bicep
+jobs:
+  create_slots:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Login to Azure using OIDC
+        id: azure-login
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      - name: install Azure CLI
+        run: |
+          curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+
+      - name: Create Slots
+        run: |
+          az deployment group create \
+            --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+            --template-file infra/main.bicep \
+            --parameters appName=${{ secrets.AZURE_APP_NAME }} \
+            --parameters location=${{ secrets.AZURE_LOCATION }}

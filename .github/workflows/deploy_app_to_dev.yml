@@ -1,0 +1,48 @@
+name: deploy_app_to_dev
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/deploy_app_to_dev.yml
+      - SlotDemo/**
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore SlotDemo/SlotDemo.csproj
+
+      - name: Build app
+        run: dotnet build SlotDemo/SlotDemo.csproj --configuration Release --no-restore
+
+      - name: Publish app
+        run: dotnet publish SlotDemo/SlotDemo.csproj --configuration Release --output ./publish --no-build
+
+      - name: Zip published app
+        run: zip -r app.zip ./publish
+
+      - name: Azure login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Deploy app to dev slot
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ secrets.AZURE_APP_NAME }}
+          slot-name: dev
+          package: app.zip
