@@ -41,7 +41,9 @@ jobs:
         run: dotnet publish SlotDemo/SlotDemo.csproj --configuration Release --output ./publish --no-build
 
       - name: Zip published app
-        run: zip -r app.zip ./publish
+        run: |
+          cd publish
+          zip -r ../app.zip .
 
       - name: Azure login
         uses: azure/login@v2
@@ -79,3 +81,15 @@ jobs:
           app-name: ${{ secrets.AZURE_APP_NAME }}
           slot-name: dev
           package: app.zip
+
+      - name: Validate dev slot health
+        run: |
+          for attempt in {1..12}; do
+            if curl --fail --silent --show-error \
+              "https://${{ secrets.AZURE_APP_NAME }}-dev.azurewebsites.net/health"; then
+              exit 0
+            fi
+            sleep 10
+          done
+          echo "The dev slot health endpoint did not return HTTP 2xx."
+          exit 1
