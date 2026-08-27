@@ -7,6 +7,12 @@ on:
     paths:
       - .github/workflows/deploy_app_to_dev.yml
       - SlotDemo/**
+  workflow_dispatch:
+      inputs:
+        app_name:
+          description: 'Azure App Service name'
+          required: true
+          default: "my-app"
 
 permissions:
   contents: read
