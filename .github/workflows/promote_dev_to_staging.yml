@@ -6,7 +6,7 @@ on:
       app_name:
         description: 'Azure App Service name'
         required: true
-        default: "my-app-service"
+        default: "my-app"
 
 permissions:
   contents: read
